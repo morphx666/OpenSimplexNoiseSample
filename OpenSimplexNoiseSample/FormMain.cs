@@ -25,6 +25,7 @@ namespace OpenSimplexNoiseSample {
         private bool helpVisible = true;
         private SizeF ss;
         private SolidBrush hlpBackColor = new SolidBrush(Color.FromArgb(196, 33, 33, 33));
+        private Rectangle formBounds;
 #if DEBUG
         private int frameCounter = 0;
         private Stopwatch sw = new Stopwatch();
@@ -68,6 +69,9 @@ namespace OpenSimplexNoiseSample {
                         break;
                     case Keys.C:
                         mode = (mode == Modes.BW ? Modes.Color : Modes.BW);
+                        break;
+                    case Keys.F:
+                        SwitchFullScreen();
                         break;
                     case Keys.P:
                         pixelation = !pixelation;
@@ -118,11 +122,8 @@ namespace OpenSimplexNoiseSample {
         }
 
         private void RenderNoise() {
-            double xOff;
-            double yOff;
-            double zOff = 0.0;
-            int x;
-            int y;
+            double xOff, yOff, zOff = 0.0;
+            int x, y;
             int bValue;
 
             while(true) {
@@ -167,15 +168,29 @@ namespace OpenSimplexNoiseSample {
             }
         }
 
+        private void SwitchFullScreen() {
+            if(this.FormBorderStyle == FormBorderStyle.None) {
+                this.FormBorderStyle = FormBorderStyle.Sizable;
+                this.Bounds = formBounds;
+                this.TopMost = false;
+            } else {
+                formBounds = this.Bounds;
+                this.FormBorderStyle = FormBorderStyle.None;
+                this.Bounds = Screen.FromPoint(this.Location).Bounds;
+                this.TopMost = true;
+            }
+        }
+
         private void RenderHelp(Graphics g) {
             PointF p = new Point(10, 10);
 
-            g.FillRectangle(hlpBackColor, p.X - 5, p.Y - 5, p.X + 5 + (42 * ss.Width), p.Y + 5 + (11 * ss.Height));
+            g.FillRectangle(hlpBackColor, p.X - 5, p.Y - 5, p.X + 5 + (42 * ss.Width), p.Y + 5 + (12 * ss.Height));
 
             g.DrawString("F1:   Toggle this dialog (help)", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
             ; p.Y += ss.Height;
             g.DrawString("C:    Toggle B&W and Color modes", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
             g.DrawString($"P:    Toggle Pixelation   [{(pixelation ? "ON" : "OFF")}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"F:    Toggle Fullscreen   [{(this.TopMost ? "ON" : "OFF")}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
             g.DrawString($"Up/+: Increase Resolution [{resolution}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
             g.DrawString($"Dn/-: Decrease Resolution [{resolution}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
             ; p.Y += ss.Height;
