@@ -1,5 +1,5 @@
 # OpenSimplexNoiseSample
-Sample implementation of the OpenSimplexNoise algorithm
+Sample implementation of the [OpenSimplexNoise](https://en.wikipedia.org/wiki/OpenSimplex_noise) algorithm by [KdotJPG](https://gist.github.com/KdotJPG)
 
 Inpired by the video [What is OpenSimplex Noise?](https://www.youtube.com/watch?v=Lv9gyZZJPE0) from the YoutTube [The Coding Train](https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw) channel.
 
