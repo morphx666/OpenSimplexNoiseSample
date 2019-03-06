@@ -26,10 +26,9 @@ namespace OpenSimplexNoiseSample {
         private SizeF ss;
         private SolidBrush hlpBackColor = new SolidBrush(Color.FromArgb(196, 33, 33, 33));
         private Rectangle formBounds;
-#if DEBUG
         private int frameCounter = 0;
+        private string fps = "";
         private Stopwatch sw = new Stopwatch();
-#endif 
 
         public FormMain() {
             InitializeComponent();
@@ -45,16 +44,11 @@ namespace OpenSimplexNoiseSample {
             ss.Height -= 4.8F;
 
             RebuildBitmap();
-#if DEBUG
             sw.Start();
-#endif
 
-            this.Resize += (object o1, EventArgs e1) => {
-                RebuildBitmap();
-            };
+            this.Resize += (object o1, EventArgs e1) => RebuildBitmap();
 
             this.Paint += (object o1, PaintEventArgs e1) => {
-                // hmmm... I really prefer the pixelation effect with 'NearestNeighbor'
                 if(pixelation) e1.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 lock(syncObj) {
                     e1.Graphics.DrawImage(bmp.Bitmap, 0, 0, this.DisplayRectangle.Width + resolution, this.DisplayRectangle.Height + resolution);
@@ -111,14 +105,12 @@ namespace OpenSimplexNoiseSample {
 
             Task.Run(() => {
                 while(true) {
-                    Thread.Sleep(1000 / 30);
+                    Thread.Sleep(33);
                     this.Invalidate();
                 }
             });
 
-            Task.Run(() => {
-                RenderNoise();
-            });
+            Task.Run(() => RenderNoise());
         }
 
         private void RenderNoise() {
@@ -127,36 +119,32 @@ namespace OpenSimplexNoiseSample {
             int bValue;
 
             while(true) {
-                lock(syncObj) {
-                    xOff = 0.0;
-                    for(x = 0; x < bmp.Width; x++) {
-                        xOff += xInc;
-                        yOff = 0.0;
-                        for(y = 0; y < bmp.Height; y++) {
-                            yOff += yInc;
+                xOff = 0.0;
+                for(x = 0; x < bmp.Width; x++) {
+                    xOff += xInc;
+                    yOff = 0.0;
+                    for(y = 0; y < bmp.Height; y++) {
+                        yOff += yInc;
 
-                            switch(mode) {
-                                case Modes.BW:
-                                    bValue = (int)((noise.Evaluate(xOff, yOff, zOff) + 1.0) * 128.0);
-                                    bmp.SetPixel(x, y, Color.FromArgb(bValue, bValue, bValue));
-                                    break;
-                                case Modes.Color:
-                                    c.Hue = noise.Evaluate(xOff, yOff, zOff) * 360.0;
-                                    bmp.SetPixel(x, y, c.Color);
-                                    break;
-                            }
+                        switch(mode) {
+                            case Modes.BW:
+                                bValue = (int)((noise.Evaluate(xOff, yOff, zOff) + 1.0) * 128.0);
+                                bmp.SetPixel(x, y, Color.FromArgb(bValue, bValue, bValue));
+                                break;
+                            case Modes.Color:
+                                c.Hue = noise.Evaluate(xOff, yOff, zOff) * 360.0;
+                                bmp.SetPixel(x, y, c.Color);
+                                break;
                         }
                     }
-                    zOff += zInc;
+                }
+                zOff += zInc;
 
-#if DEBUG
-                    frameCounter += 1;
-                    if(frameCounter >= 15) {
-                        Debug.WriteLine($"FPS: {(double)(frameCounter * 1000) / sw.ElapsedMilliseconds:N2}");
-                        frameCounter = 0;
-                        sw.Restart();
-                    }
-#endif
+                frameCounter += 1;
+                if(frameCounter >= 30) {
+                    fps = $"FPS: {(double)(frameCounter * 1000) / sw.ElapsedMilliseconds:N2}";
+                    frameCounter = 0;
+                    sw.Restart();
                 }
             }
         }
@@ -184,20 +172,26 @@ namespace OpenSimplexNoiseSample {
         private void RenderHelp(Graphics g) {
             PointF p = new Point(10, 10);
 
-            g.FillRectangle(hlpBackColor, p.X - 5, p.Y - 5, p.X + 5 + (42 * ss.Width), p.Y + 5 + (12 * ss.Height));
+            g.FillRectangle(hlpBackColor, p.X - 5,
+                                          p.Y - 5,
+                                          p.X + 5 + (42 * ss.Width),
+                                          p.Y + 5 + (14 * ss.Height));
 
-            g.DrawString("F1:   Toggle this dialog (help)", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
-            ; p.Y += ss.Height;
+            g.DrawString(this.Text, this.Font, Brushes.OrangeRed, p);
+            g.DrawString(fps, this.Font, Brushes.CadetBlue, p.X + (this.Text.Length + 19 - fps.Length) * ss.Width, p.Y);
+            p.Y += ss.Height * 2;
+            g.DrawString("F1:   Toggle this dialog (help)", this.Font, Brushes.Gainsboro, p);
+            p.Y += ss.Height * 2;
             g.DrawString("C:    Toggle B&W and Color modes", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
-            g.DrawString($"P:    Toggle Pixelation   [{(pixelation ? "ON" : "OFF")}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
-            g.DrawString($"F:    Toggle Fullscreen   [{(this.TopMost ? "ON" : "OFF")}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
-            g.DrawString($"Up/+: Increase Resolution [{resolution}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            g.DrawString($"Dn/-: Decrease Resolution [{resolution}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            ; p.Y += ss.Height;
+            g.DrawString($"P:    Toggle Pixelation   [{(pixelation ? "ON" : "OFF").PadLeft(3)}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"F:    Toggle Fullscreen   [{(this.TopMost ? "ON" : "OFF").PadLeft(3)}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"Up/+: Increase Resolution [{1.0 / resolution * 100.0:N2}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
+            g.DrawString($"Dn/-: Decrease Resolution [{1.0 / resolution * 100.0:N2}]", this.Font, Brushes.Gainsboro, p.X, p.Y);
+            p.Y += ss.Height * 2;
             g.DrawString("For the following, press SHIFT to decrease", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            g.DrawString($"X: X noise swept step     [{xInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            g.DrawString($"Y: Y noise swept step     [{yInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            g.DrawString($"Z: Z noise swept step     [{zInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y);
+            g.DrawString($"X: X noise sweep step     [{xInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
+            g.DrawString($"Y: Y noise sweep step     [{yInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
+            g.DrawString($"Z: Z noise sweep step     [{zInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y);
         }
     }
 }
