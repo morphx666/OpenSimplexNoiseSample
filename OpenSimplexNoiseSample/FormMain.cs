@@ -119,13 +119,8 @@ namespace OpenSimplexNoiseSample {
             int bValue;
 
             while(true) {
-                xOff = 0.0;
-                for(x = 0; x < bmp.Width; x++) {
-                    xOff += xInc;
-                    yOff = 0.0;
-                    for(y = 0; y < bmp.Height; y++) {
-                        yOff += yInc;
-
+                for(y = 0, yOff = 0.0; y < bmp.Height; y++, yOff += xInc) {
+                    for(x = 0, xOff = 0.0; x < bmp.Width; x++, xOff += yInc) {
                         switch(mode) {
                             case Modes.BW:
                                 bValue = (int)((noise.Evaluate(xOff, yOff, zOff) + 1.0) * 128.0);
@@ -185,13 +180,13 @@ namespace OpenSimplexNoiseSample {
             g.DrawString("C:    Toggle B&W and Color modes", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
             g.DrawString($"P:    Toggle Pixelation   [{(pixelation ? "ON" : "OFF").PadLeft(3)}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
             g.DrawString($"F:    Toggle Fullscreen   [{(this.TopMost ? "ON" : "OFF").PadLeft(3)}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
-            g.DrawString($"Up/+: Increase Resolution [{1.0 / resolution * 100.0:N2}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            g.DrawString($"Dn/-: Decrease Resolution [{1.0 / resolution * 100.0:N2}]", this.Font, Brushes.Gainsboro, p.X, p.Y);
+            g.DrawString($"Up/+: Increase Resolution [{1.0 / resolution * 100.0:N2}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"Dn/-: Decrease Resolution [{1.0 / resolution * 100.0:N2}]", this.Font, Brushes.Gainsboro, p);
             p.Y += ss.Height * 2;
-            g.DrawString("For the following, press SHIFT to decrease", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            g.DrawString($"X: X noise sweep step     [{xInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            g.DrawString($"Y: Y noise sweep step     [{yInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y); p.Y += ss.Height;
-            g.DrawString($"Z: Z noise sweep step     [{zInc:F3}]", this.Font, Brushes.Gainsboro, p.X, p.Y);
+            g.DrawString("For the following, press SHIFT to decrease", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"X: X noise sweep step     [{xInc:F3}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"Y: Y noise sweep step     [{yInc:F3}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"Z: Z noise sweep step     [{zInc:F3}]", this.Font, Brushes.Gainsboro, p);
         }
     }
 }
