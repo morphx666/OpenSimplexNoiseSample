@@ -7,4 +7,4 @@ Inpired by the video [What is OpenSimplex Noise?](https://www.youtube.com/watch?
 
 ![A sample implementation on the OpenSimplex Noise algorithm](https://xfx.net/stackoverflow/osn/osn01.png)
 
-![A sample implementation on the OpenSimplex Noise algorithm](https://xfx.net/stackoverflow/osn/osn02.png)
+![This reminds me of the plasma effect in the SecondReality 90s demo](https://xfx.net/stackoverflow/osn/osn02.png)
