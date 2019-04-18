@@ -25,7 +25,7 @@
         private void InitializeComponent() {
             this.SuspendLayout();
             // 
-            // FormMain
+            // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(784, 561);
@@ -35,10 +35,12 @@
             this.Text = "OpenSimplexNoise Sample";
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.ResumeLayout(false);
-
         }
 
         #endregion
+
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button buttonExit;
     }
 }
 
