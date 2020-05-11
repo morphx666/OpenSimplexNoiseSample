@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Threading;
+using DirectBitmapLib;
 
 namespace OpenSimplexNoiseSample {
     public partial class FormMain : Form {
@@ -15,20 +16,20 @@ namespace OpenSimplexNoiseSample {
         private double xInc = 0.045;
         private double yInc = 0.045;
         private double zInc = 0.005;
-        private OpenSimplexNoise noise = new OpenSimplexNoise();
+        private readonly OpenSimplexNoise noise = new OpenSimplexNoise();
         private DirectBitmap bmp;
-        private object syncObj = new object();
-        private HLSRGB c = new HLSRGB() { Luminance = 0.5F, Saturation = 0.8F };
+        private readonly object syncObj = new object();
+        private readonly HLSRGB c = new HLSRGB() { Luminance = 0.5F, Saturation = 0.8F };
         private Modes mode = Modes.Color;
         private int resolution = 6; // 1 = Maximum resolution
         private bool pixelation = true;
         private bool helpVisible = true;
         private SizeF ss;
-        private SolidBrush hlpBackColor = new SolidBrush(Color.FromArgb(196, 33, 33, 33));
+        private readonly SolidBrush hlpBackColor = new SolidBrush(Color.FromArgb(196, 33, 33, 33));
         private Rectangle formBounds;
         private int frameCounter = 0;
         private string fps = "";
-        private Stopwatch sw = new Stopwatch();
+        private readonly Stopwatch sw = new Stopwatch();
 
         public FormMain() {
             InitializeComponent();
@@ -178,8 +179,8 @@ namespace OpenSimplexNoiseSample {
             g.DrawString("F1:   Toggle this dialog (help)", this.Font, Brushes.Gainsboro, p);
             p.Y += ss.Height * 2;
             g.DrawString("C:    Toggle B&W and Color modes", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
-            g.DrawString($"P:    Toggle Pixelation   [{(pixelation ? "ON" : "OFF").PadLeft(3)}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
-            g.DrawString($"F:    Toggle Fullscreen   [{(this.TopMost ? "ON" : "OFF").PadLeft(3)}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"P:    Toggle Pixelation   [{(pixelation ? "ON" : "OFF"),-3}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
+            g.DrawString($"F:    Toggle Fullscreen   [{(this.TopMost ? "ON" : "OFF"),-3}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
             g.DrawString($"Up/+: Increase Resolution [{1.0 / resolution * 100.0:N2}]", this.Font, Brushes.Gainsboro, p); p.Y += ss.Height;
             g.DrawString($"Dn/-: Decrease Resolution [{1.0 / resolution * 100.0:N2}]", this.Font, Brushes.Gainsboro, p);
             p.Y += ss.Height * 2;
