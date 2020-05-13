@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenSimplexNoiseSample", "OpenSimplexNoiseSample\OpenSimplexNoiseSample.csproj", "{0290031B-9D92-4CCD-A53B-DF44CF8A0363}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSimplexNoiseSample", "OpenSimplexNoiseSample\OpenSimplexNoiseSample.csproj", "{0290031B-9D92-4CCD-A53B-DF44CF8A0363}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MorphxLibs", "MorphxLibs\MorphxLibs.shproj", "{F92EE134-8CB3-455A-9160-841004898E8D}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		MorphxLibs\MorphxLibs.projitems*{0290031b-9d92-4ccd-a53b-df44cf8a0363}*SharedItemsImports = 5
+		MorphxLibs\MorphxLibs.projitems*{f92ee134-8cb3-455a-9160-841004898e8d}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

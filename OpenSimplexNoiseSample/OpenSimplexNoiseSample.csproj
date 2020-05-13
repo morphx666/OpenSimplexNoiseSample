@@ -18,14 +18,18 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\Release\</OutputPath>
+    <DefineConstants>TRACE;WINFORMS</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\Release\</OutputPath>
+    <DefineConstants>TRACE;WINFORMS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+
+  <Import Project="..\MorphxLibs\MorphxLibs.projitems" Label="Shared" />
 
 </Project>

@@ -4,7 +4,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Threading;
-using DirectBitmapLib;
+using System.Drawing.Drawing2D;
+using MorphxLibs;
 
 namespace OpenSimplexNoiseSample {
     public partial class FormMain : Form {
@@ -50,10 +51,14 @@ namespace OpenSimplexNoiseSample {
             this.Resize += (object o1, EventArgs e1) => RebuildBitmap();
 
             this.Paint += (object o1, PaintEventArgs e1) => {
-                if(pixelation) e1.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                e1.Graphics.CompositingMode = CompositingMode.SourceCopy;
+                if(pixelation) e1.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
                 lock(syncObj) {
                     e1.Graphics.DrawImage(bmp.Bitmap, 0, 0, this.DisplayRectangle.Width + resolution, this.DisplayRectangle.Height + resolution);
-                    if(helpVisible) RenderHelp(e1.Graphics);
+                    if(helpVisible) {
+                        e1.Graphics.CompositingMode = CompositingMode.SourceOver;
+                        RenderHelp(e1.Graphics);
+                    }
                 }
             };
 

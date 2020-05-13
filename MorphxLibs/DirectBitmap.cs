@@ -1,10 +1,12 @@
-﻿using System;
+﻿#if WINFORMS
+using System;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace DirectBitmapLib {
+namespace MorphxLibs {
     public class DirectBitmap : IDisposable {
         public readonly Bitmap Bitmap;
         public readonly int Width;
@@ -74,6 +76,10 @@ namespace DirectBitmapLib {
 
         public void SetPixel(int x, int y, Color value) {
             if(x < 0 || x >= Width || y < 0 || y >= Height) return;
+            SetPixelFast(x, y, value);
+        }
+
+        public void SetPixelFast(int x, int y, Color value) {
             int offset = y * w4 + x * 4;
             Bits[offset + 3] = value.A;
             Bits[offset + 2] = value.R;
@@ -97,9 +103,6 @@ namespace DirectBitmapLib {
     }
 
     public static class DirectBitmapExtensions {
-        public const double ToRad = Math.PI / 180.0;
-        public const double ToDeg = 180.0 / Math.PI;
-
         public static void Clear(this DirectBitmap dbmp, Color c) {
             byte[] b = { c.B, c.G, c.R, c.A };
             int bufferSize = dbmp.Height * dbmp.Width * 4;
@@ -160,3 +163,4 @@ namespace DirectBitmapLib {
         }
     }
 }
+#endif
